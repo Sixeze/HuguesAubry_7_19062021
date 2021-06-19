@@ -1,2 +1,21 @@
 @import "../variable_overrides"; // <-- variable modifié de bootstap
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+
+* {
+    list-style-type: none;
+}
+
+#ustensiles::placeholder,
+#ingredients::placeholder,
+#appliances::placeholder {
+    color: #fff;
+}
+
+.sectionTag {
+    height: 50px;
+}
+
+.bg-color {
+    background-color: #C7BEBE;
+}
