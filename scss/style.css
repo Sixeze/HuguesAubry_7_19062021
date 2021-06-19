@@ -11465,4 +11465,40 @@ fieldset:disabled .btn {
     display: none !important;
   }
 }
+
+* {
+  list-style-type: none;
+}
+
+#ustensiles::-webkit-input-placeholder,
+#ingredients::-webkit-input-placeholder,
+#appliances::-webkit-input-placeholder {
+  color: #fff;
+}
+
+#ustensiles:-ms-input-placeholder,
+#ingredients:-ms-input-placeholder,
+#appliances:-ms-input-placeholder {
+  color: #fff;
+}
+
+#ustensiles::-ms-input-placeholder,
+#ingredients::-ms-input-placeholder,
+#appliances::-ms-input-placeholder {
+  color: #fff;
+}
+
+#ustensiles::placeholder,
+#ingredients::placeholder,
+#appliances::placeholder {
+  color: #fff;
+}
+
+.sectionTag {
+  height: 50px;
+}
+
+.bg-color {
+  background-color: #C7BEBE;
+}
 /*# sourceMappingURL=style.css.map */

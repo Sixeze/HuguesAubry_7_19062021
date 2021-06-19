@@ -13,8 +13,97 @@
     <title>Les petits plats</title>
   </head>
   <body>
-    <h1 class="h1">les petits plats</h1>
-    <script src="./js/index.js" type="module"></script>
+    <div class="container border border-primary">
+      <header
+        role="banner"
+        class="container border border-secondary col-8 m-auto mb-4"
+      >
+        <div class="row mb-2">
+          <img src="img/LPP.svg" alt="Logo" class="col-2 m-auto" />
+        </div>
+        <div class="row mb-2">
+          <img src="img/LPPtxt.svg" alt="titre du site" class="col-10 m-auto" />
+        </div>
+      </header>
+      <section role="searchbox" class="container">
+        <div class="row">
+          <div class="input-group mb-1">
+            <input
+              class="form-control col-11 bg-light rounded"
+              type="text"
+              placeholder="Rechercher un ingrédient, appareil, ustensile ou une recette"
+            />
+            <div class="input-group-append border-left-0">
+              <img
+                class="input-group-text bg-light"
+                src="img/searchLogo.svg"
+                alt="search logo"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section role="list" class="container border border-secondary sectionTag">
+        <ul class="">
+          <li role="button"></li>
+        </ul>
+      </section>
+      <section role="combobox" class="container border border-secondary">
+        <div class="row my-3">
+          <div class="input-inline input-group-lg col-lg-3">
+            <input
+              id="ingredients"
+              class="form-control bg-primary text-light col-3"
+              type="text"
+              minlength="3"
+              list="ingredientsList"
+              placeholder="ingredients"
+            />
+            <datalist id="ingredientsList"></datalist>
+          </div>
+          <div class="input-inline input-group-lg col-lg-3">
+            <input
+              id="appliances"
+              class="form-control bg-success text-light"
+              type="text"
+              minlength="3"
+              list="appliancesList"
+              placeholder="appareils"
+            />
+            <datalist id="appliancesList"> </datalist>
+          </div>
+          <div class="input-inline input-group-lg col-lg-3">
+            <input
+              id="ustensiles"
+              class="form-control bg-danger text-light"
+              type="text"
+              minlength="3"
+              list="ustensilesList"
+              placeholder="ustensiles"
+            />
+            <datalist id="ustensilesList"></datalist>
+          </div>
+        </div>
+      </section>
+      <main role="main" class="container border border-secondary">
+        <div class="col-xl-4 col-lg-6 col-md-6">
+          <div class="card mb-4">
+            <img class="card-img-top bg-color" src="" alt="" width="auto" height="150px"></img>
+            <div class="card-body">
+              <div class="row no-gutters">
+                <h5 class=""></h5> 
+                <h5 class=""></h5>
+              </div>
+              <div class="row">
+                <p class=""></p>
+                <p class=""></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -31,5 +120,6 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+    <script src="./js/index.js" type="module"></script>
   </body>
 </html>
