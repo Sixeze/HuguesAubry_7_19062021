@@ -1,0 +1,18 @@
+{
+  "name": "huguesaubry_7_19062021",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "eslint": "^7.29.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "save": "^2.4.0"
+  }
+}
