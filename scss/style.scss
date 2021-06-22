@@ -6,7 +6,7 @@
     list-style-type: none;
 }
 
-#ustensiles::placeholder,
+#ustensils::placeholder,
 #ingredients::placeholder,
 #appliances::placeholder {
     color: #fff;
@@ -18,4 +18,10 @@
 
 .bg-color {
     background-color: #C7BEBE;
+}
+
+.textDescription {
+    height: 200px;
+    overflow: auto;
+
 }
