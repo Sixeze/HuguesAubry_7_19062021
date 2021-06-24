@@ -9,6 +9,9 @@ console.log(searchBar);
 const tagBoxContainer = document.querySelector(".tagBoxContainer");
 const mainDisplayRecipes = document.querySelector("#displayRecipes");
 
+// DOM elements for tagBox
+const tagBox = document.querySelector(".tagBoxContainer");
+
 // DOM elements for ingredients
 const ingredientInput = document.querySelector("#ingredients");
 const datalistIngredients = document.querySelector("#ingredientsList");
@@ -21,31 +24,40 @@ const datalistAppliances = document.querySelector("#appliancesList");
 const ustensilInput = document.querySelector("#ustensils");
 const datalistUstensils = document.querySelector("#ustensilsList");
 
-function displayComboBox() {
-  const ingredientsList = classOfRecipe.createAllIngredientsList();
-  const appliancesList = classOfRecipe.createAllAppliancesList();
-  const ustensilsList = classOfRecipe.createAllUstensilsList();
+// const array from recipeClass
+const allRecipesObjElts = classOfRecipe.createAllRecipeList();
+const newRecipesObjElts = classOfRecipe.createNewRecipeList();
 
+const ingredientsList = classOfRecipe.createAllIngredientsList();
+const appliancesList = classOfRecipe.createAllAppliancesList();
+const ustensilsList = classOfRecipe.createAllUstensilsList();
+const filteredIngredientList = classOfRecipe.createNewIngredientsList();
+
+// call to line 89
+function displayComboBox(arrayIng, arrayApp, arrayUst) {
   datalistIngredients.innerHTML = "";
   datalistAppliances.innerHTML = "";
   datalistUstensils.innerHTML = "";
 
-  ingredientsList.forEach((ingredient) => {
+  arrayIng.forEach((ingredient) => {
     datalistIngredients.innerHTML += `<option value="${ingredient}"${ingredient}</option>`;
   });
 
-  appliancesList.forEach((appliance) => {
+  arrayApp.forEach((appliance) => {
     datalistAppliances.innerHTML += `<option value="${appliance}"${appliance}</option>`;
   });
 
-  ustensilsList.forEach((ustensil) => {
+  arrayUst.forEach((ustensil) => {
     datalistUstensils.innerHTML += `<option value="${ustensil}"${ustensil}</option>`;
   });
 }
 
-function displayRecipes() {
-  const recipesObjectElements = classOfRecipe.createAllRecipeList();
-  recipesObjectElements.forEach((recipe) => {
+function displayRecipes(arrayRecipe) {
+  while (mainDisplayRecipes.firstChild) {
+    mainDisplayRecipes.removeChild(mainDisplayRecipes.firstChild);
+  }
+  mainDisplayRecipes.innerHTML = "";
+  arrayRecipe.forEach((recipe) => {
     const articleRecipes = document.createElement("article");
     articleRecipes.classList.add(
       "card",
@@ -85,32 +97,115 @@ function displayRecipes() {
     mainDisplayRecipes.appendChild(articleRecipes);
   });
 
-  {
-    /* <article class="card col-md-4 mb-4 border border-danger">
-  <img
-    class="card-img-top bg-color"
-    src=""
-    alt=""
-    width="auto"
-    height="150px"
-  ></img>
-  <div class="card-body">
-    <div class="row no-gutters">
-      <h5 class=""></h5>
-      <h5 class=""></h5>
-    </div>
-    <div class="row">
-      <p class=""></p>
-      <p class=""></p>
-    </div>
-  </div>
-</article>; */
-  }
-
-  displayComboBox();
+  // func to show 3 combobox list
 }
 
-displayRecipes();
+// all input search
+searchBar.addEventListener("input", filterCardElements);
+ingredientInput.addEventListener("input", onInput);
+applianceInput.addEventListener("input", onInput);
+ustensilInput.addEventListener("input", (e) => {
+  onInput(e);
+  ustensilInput.value = "";
+
+  // listustensilsSelect(newRecipes); // func new datalist
+  // ustensilInput.value = ""; // reinnicialise l'input après l'appel des fonctions
+});
+
+//function for comboBox
+function onInput(e) {
+  let input = e.target;
+  let val = input.value.toLowerCase();
+  let list = input.getAttribute("list");
+  let options = document.getElementById(list).childNodes;
+  // console.log(options);
+  options.forEach((option) => {
+    let optVal = option.value.toLowerCase();
+    if (optVal === val) {
+      console.log(optVal);
+      ingredientSelected(optVal);
+      applianceSelected(optVal);
+      ustensilSelected(optVal);
+
+      displayRecipes(newRecipesObjElts);
+      console.log(newRecipesObjElts);
+      displayComboBox(filteredIngredientList, appliancesList, ustensilsList);
+    }
+  });
+}
+
+function ingredientSelected(elementSelected) {
+  allRecipesObjElts.forEach((recipe) => {
+    recipe.ingredients.forEach((i) => {
+      let ingredient = i.ingredient;
+      if (ingredient.toLowerCase().indexOf(elementSelected) === -1) {
+        return false;
+      } else {
+        newRecipesObjElts.push(recipe);
+        return true;
+      }
+    });
+  });
+}
+
+function applianceSelected(elementSelected) {
+  allRecipesObjElts.forEach((recipe) => {
+    if (recipe.appliance.toLowerCase().indexOf(elementSelected) === -1) {
+      return false;
+    } else {
+      console.log(
+        "la recette '" +
+          recipe.name +
+          "' contient l'element: " +
+          elementSelected
+      );
+      newRecipesObjElts.push(recipe);
+      return true;
+    } //else
+  });
+}
+
+function ustensilSelected(elementSelected) {
+  allRecipesObjElts.forEach((recipe) => {
+    recipe.ustensils.forEach((ustensil) => {
+      if (ustensil.toLowerCase().indexOf(elementSelected) === -1) {
+        return false;
+      } else {
+        console.log(
+          "la recette '" +
+            recipe.name +
+            "' contient l'element: " +
+            elementSelected
+        );
+        newRecipesObjElts.push(recipe);
+        return true;
+      } //else
+    }); // forEachU
+  }); // forEachR
+}
+
+// function createTagElt() {
+//
+// }
+
+//function for Search Bar
+function filterCardElements(e) {
+  let inputValue = e.target.value;
+  if (inputValue.length > 2) {
+    mainDisplayRecipes.innerHTML = "";
+    displayRecipes();
+  }
+  if (inputValue.length <= 2) {
+    displayRecipes(allRecipesObjElts);
+  } else {
+    mainDisplayRecipes.innerHTML =
+      "<h2>il n'y a pas de recettes avec vos critère de recherche</h2>";
+  }
+}
+
+// show Recipe open Page
+displayRecipes(allRecipesObjElts);
+displayComboBox(ingredientsList, appliancesList, ustensilsList);
 
 // const newRecipeObjectList = classOfRecipe.createNewRecipeList();
 // console.log(newRecipeObjectList);
