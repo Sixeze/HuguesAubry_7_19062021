@@ -11506,4 +11506,9 @@ fieldset:disabled .btn {
   height: 200px;
   overflow: auto;
 }
+
+datalist {
+  width: 200px;
+  background-color: red;
+}
 /*# sourceMappingURL=style.css.map */

@@ -23,6 +23,8 @@ export class recipeClass {
     this.arrayForIngredientSelected = [];
     this.arrayForApplianceSelected = [];
     this.arrayForUstensilsSelected = [];
+
+    this.ingredientsFiltered = [];
   }
 
   createAllRecipeList() {
@@ -37,11 +39,26 @@ export class recipeClass {
     return this.allIngredientsSetSort;
   }
 
+  createNewIngredientsList() {
+    this.filterIngredients();
+    return this.ingredientsFiltered;
+  }
+
   createAllAppliancesList() {
     return this.allAppliancesSetSort;
   }
 
   createAllUstensilsList() {
     return this.allUstensilsSetSort;
+  }
+
+  filterIngredients() {
+    this.ingredientsFiltered = [
+      ...new Set(
+        this.newRecipes
+          .flatMap((recipe) => recipe.ingredients.map((i) => i.ingredient))
+          .sort()
+      ),
+    ];
   }
 }
