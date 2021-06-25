@@ -1,5 +1,3 @@
-import { recipes } from "./recipes.js";
-
 export class recipeClass {
   constructor() {
     this.allRecipes = recipes;
@@ -24,7 +22,7 @@ export class recipeClass {
     this.arrayForApplianceSelected = [];
     this.arrayForUstensilsSelected = [];
 
-    this.ingredientsFiltered = [];
+    this.ingredientsFiltered = this.allIngredientsSetSort.slice();
   }
 
   createAllRecipeList() {
@@ -62,3 +60,14 @@ export class recipeClass {
     ];
   }
 }
+
+// const classOfRecipe = new recipeClass();
+
+// // const array from recipeClass
+// const allRecipesObjElts = classOfRecipe.createAllRecipeList();
+// const newRecipesObjElts = classOfRecipe.createNewRecipeList();
+
+// const ingredientsList = classOfRecipe.createAllIngredientsList();
+// const appliancesList = classOfRecipe.createAllAppliancesList();
+// const ustensilsList = classOfRecipe.createAllUstensilsList();
+// const filteredIngredientList = classOfRecipe.createNewIngredientsList();
