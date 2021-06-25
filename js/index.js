@@ -1,16 +1,20 @@
 import { recipeClass } from "./recipesClass.js";
+import { recipes } from "./recipes.js";
 
-const classOfRecipe = new recipeClass();
-console.log(classOfRecipe);
+const allRecipes = recipes;
+let newRecipes = [];
+const selectedIngredient = [];
+const selectedAppliance = [];
+const selectedUstensils = [];
 
 // DOM elements for index
 const searchBar = document.querySelector(".inputSearchBar");
-console.log(searchBar);
-const tagBoxContainer = document.querySelector(".tagBoxContainer");
+// console.log(searchBar);
+
 const mainDisplayRecipes = document.querySelector("#displayRecipes");
 
 // DOM elements for tagBox
-const tagBox = document.querySelector(".tagBoxContainer");
+const tagBoxContainer = document.querySelector("#tagBoxContainer");
 
 // DOM elements for ingredients
 const ingredientInput = document.querySelector("#ingredients");
@@ -24,34 +28,131 @@ const datalistAppliances = document.querySelector("#appliancesList");
 const ustensilInput = document.querySelector("#ustensils");
 const datalistUstensils = document.querySelector("#ustensilsList");
 
-// const array from recipeClass
-const allRecipesObjElts = classOfRecipe.createAllRecipeList();
-const newRecipesObjElts = classOfRecipe.createNewRecipeList();
+// all input search
+searchBar.addEventListener("input", filterCardElements);
 
-const ingredientsList = classOfRecipe.createAllIngredientsList();
-const appliancesList = classOfRecipe.createAllAppliancesList();
-const ustensilsList = classOfRecipe.createAllUstensilsList();
-const filteredIngredientList = classOfRecipe.createNewIngredientsList();
+ingredientInput.addEventListener("input", (e) => {
+  onInput(e);
+  createTagElt(datalistIngredients, ingredientInput, selectedIngredient);
+  console.log(datalistIngredients);
+  updateUlTags(selectedIngredient, "bg-primary");
 
-// call to line 89
-function displayComboBox(arrayIng, arrayApp, arrayUst) {
-  datalistIngredients.innerHTML = "";
-  datalistAppliances.innerHTML = "";
-  datalistUstensils.innerHTML = "";
+  ingredientInput.value = "";
+});
 
-  arrayIng.forEach((ingredient) => {
-    datalistIngredients.innerHTML += `<option value="${ingredient}"${ingredient}</option>`;
-  });
+applianceInput.addEventListener("input", (e) => {
+  onInput(e);
+  createTagElt(datalistAppliances, applianceInput, selectedAppliance);
 
-  arrayApp.forEach((appliance) => {
-    datalistAppliances.innerHTML += `<option value="${appliance}"${appliance}</option>`;
-  });
+  updateUlTags(selectedAppliance, "bg-success");
+  applianceInput.value = "";
+});
 
-  arrayUst.forEach((ustensil) => {
-    datalistUstensils.innerHTML += `<option value="${ustensil}"${ustensil}</option>`;
+ustensilInput.addEventListener("input", (e) => {
+  onInput(e);
+  createTagElt(datalistUstensils, ustensilInput, selectedUstensils);
+
+  updateUlTags(selectedUstensils, "bg-danger");
+  ustensilInput.value = "";
+});
+
+function createTagElt(datalist, input, selectedElts) {
+  let optionValue = [...datalist.options]
+    .map((o) => o.value)
+    .indexOf(input.value);
+  let tagSelected = datalist.options[optionValue].value;
+
+  tagBoxContainer.innerHTML = "";
+  if (optionValue === -1) {
+    return false;
+  } else {
+    selectedElts.push(tagSelected);
+  }
+}
+
+function updateUlTags(selectedElts, color) {
+  selectedElts.forEach(
+    (elt) =>
+      (tagBoxContainer.innerHTML += `<button  class="btn ${color} col-1 text-center">${elt} X </button>`)
+  );
+}
+
+//function for comboBox
+function onInput(e) {
+  let input = e.target;
+  let val = input.value.toLowerCase();
+  let list = input.getAttribute("list");
+  let options = document.getElementById(list).childNodes;
+  newRecipes = [];
+  options.forEach((option) => {
+    let optVal = option.value.toLowerCase();
+    if (optVal === val) {
+      console.log(optVal);
+
+      recipesWithIngredientSelected(optVal);
+      recipesWithApplianceSelected(optVal);
+      recipesWithUstensilSelected(optVal);
+
+      displayRecipes(newRecipes);
+      displayComboBox(newRecipes);
+    }
   });
 }
 
+function recipesWithIngredientSelected(elementSelected) {
+  allRecipes.forEach((recipe) => {
+    recipe.ingredients.forEach((i) => {
+      let ingredient = i.ingredient;
+      if (ingredient.toLowerCase().indexOf(elementSelected) === -1) {
+        return false;
+      } else {
+        newRecipes.push(recipe);
+        return true;
+      }
+    });
+  });
+}
+
+function recipesWithApplianceSelected(elementSelected) {
+  allRecipes.forEach((recipe) => {
+    if (recipe.appliance.toLowerCase().indexOf(elementSelected) === -1) {
+      return false;
+    } else {
+      newRecipes.push(recipe);
+      return true;
+    } //else
+  });
+}
+
+function recipesWithUstensilSelected(elementSelected) {
+  allRecipes.forEach((recipe) => {
+    recipe.ustensils.forEach((ustensil) => {
+      if (ustensil.toLowerCase().indexOf(elementSelected) === -1) {
+        return false;
+      } else {
+        newRecipes.push(recipe);
+        return true;
+      }
+    });
+  });
+}
+
+//function for Search Bar
+function filterCardElements(e) {
+  let inputValue = e.target.value;
+  if (inputValue.length > 2) {
+    mainDisplayRecipes.innerHTML = "";
+    displayRecipes();
+  }
+  if (inputValue.length <= 2) {
+    displayRecipes(allRecipesObjElts);
+  } else {
+    mainDisplayRecipes.innerHTML =
+      "<h2>il n'y a pas de recettes avec vos critère de recherche</h2>";
+  }
+}
+
+// call to line :
 function displayRecipes(arrayRecipe) {
   while (mainDisplayRecipes.firstChild) {
     mainDisplayRecipes.removeChild(mainDisplayRecipes.firstChild);
@@ -97,115 +198,45 @@ function displayRecipes(arrayRecipe) {
     mainDisplayRecipes.appendChild(articleRecipes);
   });
 
-  // func to show 3 combobox list
+  displayComboBox(allRecipes);
 }
 
-// all input search
-searchBar.addEventListener("input", filterCardElements);
-ingredientInput.addEventListener("input", onInput);
-applianceInput.addEventListener("input", onInput);
-ustensilInput.addEventListener("input", (e) => {
-  onInput(e);
-  ustensilInput.value = "";
+// call to line :
+function displayComboBox(array) {
+  datalistIngredients.innerHTML = "";
+  datalistAppliances.innerHTML = "";
+  datalistUstensils.innerHTML = "";
 
-  // listustensilsSelect(newRecipes); // func new datalist
-  // ustensilInput.value = ""; // reinnicialise l'input après l'appel des fonctions
-});
+  const allIngredients = [
+    ...new Set(
+      array
+        .flatMap((recipe) => recipe.ingredients.map((i) => i.ingredient))
+        .sort()
+    ),
+  ];
+  const allAppliances = [
+    ...new Set(array.flatMap((recipe) => recipe.appliance).sort()),
+  ];
 
-//function for comboBox
-function onInput(e) {
-  let input = e.target;
-  let val = input.value.toLowerCase();
-  let list = input.getAttribute("list");
-  let options = document.getElementById(list).childNodes;
-  // console.log(options);
-  options.forEach((option) => {
-    let optVal = option.value.toLowerCase();
-    if (optVal === val) {
-      console.log(optVal);
-      ingredientSelected(optVal);
-      applianceSelected(optVal);
-      ustensilSelected(optVal);
+  const allUstensils = [
+    ...new Set(array.flatMap((recipe) => recipe.ustensils).sort()),
+  ];
 
-      displayRecipes(newRecipesObjElts);
-      console.log(newRecipesObjElts);
-      displayComboBox(filteredIngredientList, appliancesList, ustensilsList);
-    }
+  allIngredients.forEach((ingredient) => {
+    datalistIngredients.innerHTML += `<option value="${ingredient}"${ingredient}</option>`;
   });
-}
 
-function ingredientSelected(elementSelected) {
-  allRecipesObjElts.forEach((recipe) => {
-    recipe.ingredients.forEach((i) => {
-      let ingredient = i.ingredient;
-      if (ingredient.toLowerCase().indexOf(elementSelected) === -1) {
-        return false;
-      } else {
-        newRecipesObjElts.push(recipe);
-        return true;
-      }
-    });
+  allAppliances.forEach((appliance) => {
+    datalistAppliances.innerHTML += `<option value="${appliance}"${appliance}</option>`;
   });
-}
 
-function applianceSelected(elementSelected) {
-  allRecipesObjElts.forEach((recipe) => {
-    if (recipe.appliance.toLowerCase().indexOf(elementSelected) === -1) {
-      return false;
-    } else {
-      console.log(
-        "la recette '" +
-          recipe.name +
-          "' contient l'element: " +
-          elementSelected
-      );
-      newRecipesObjElts.push(recipe);
-      return true;
-    } //else
+  allUstensils.forEach((ustensil) => {
+    datalistUstensils.innerHTML += `<option value="${ustensil}"${ustensil}</option>`;
   });
-}
-
-function ustensilSelected(elementSelected) {
-  allRecipesObjElts.forEach((recipe) => {
-    recipe.ustensils.forEach((ustensil) => {
-      if (ustensil.toLowerCase().indexOf(elementSelected) === -1) {
-        return false;
-      } else {
-        console.log(
-          "la recette '" +
-            recipe.name +
-            "' contient l'element: " +
-            elementSelected
-        );
-        newRecipesObjElts.push(recipe);
-        return true;
-      } //else
-    }); // forEachU
-  }); // forEachR
-}
-
-// function createTagElt() {
-//
-// }
-
-//function for Search Bar
-function filterCardElements(e) {
-  let inputValue = e.target.value;
-  if (inputValue.length > 2) {
-    mainDisplayRecipes.innerHTML = "";
-    displayRecipes();
-  }
-  if (inputValue.length <= 2) {
-    displayRecipes(allRecipesObjElts);
-  } else {
-    mainDisplayRecipes.innerHTML =
-      "<h2>il n'y a pas de recettes avec vos critère de recherche</h2>";
-  }
 }
 
 // show Recipe open Page
-displayRecipes(allRecipesObjElts);
-displayComboBox(ingredientsList, appliancesList, ustensilsList);
+displayRecipes(allRecipes);
 
 // const newRecipeObjectList = classOfRecipe.createNewRecipeList();
 // console.log(newRecipeObjectList);
