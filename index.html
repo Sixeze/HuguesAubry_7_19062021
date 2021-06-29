@@ -46,19 +46,20 @@
       <section
         id="tagBoxContainer"
         role="list"
-        class="row border border-secondary"
+        class="container border m-1"
       ></section>
 
       <!-- Section combobox -->
       <section role="combobox" class="row my-3">
         <div class="input-inline input-group-lg col-lg-3">
           <input
+            type="text"
             id="ingredients"
             class="form-control bg-primary text-light col-3"
-            type="text"
             minlength="3"
             list="ingredientsList"
             placeholder="ingredients"
+            value=""
           />
           <datalist id="ingredientsList"></datalist>
         </div>
