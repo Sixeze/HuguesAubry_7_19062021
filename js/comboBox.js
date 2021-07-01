@@ -1,26 +1,29 @@
-export function displayComboBox(array) {
-  let datalistIngredients = document.querySelector("#ingredientsList");
-  let datalistAppliances = document.querySelector("#appliancesList");
-  let datalistUstensils = document.querySelector("#ustensilsList");
+/**
+ * @param {object} arrayOfRecipes array for displaying recipe
+ */
+export function displayComboBox(arrayOfRecipes) {
+  const datalistIngredients = document.querySelector("#ingredientsList");
+  const datalistAppliances = document.querySelector("#appliancesList");
+  const datalistUstensils = document.querySelector("#ustensilsList");
 
   datalistIngredients.innerHTML = "";
   datalistAppliances.innerHTML = "";
   datalistUstensils.innerHTML = "";
 
-  const ingredientsArray = [
+  let ingredientsArray = [
     ...new Set(
-      array
+      arrayOfRecipes
         .flatMap((recipe) => recipe.ingredients.map((i) => i.ingredient))
         .sort()
     ),
   ];
 
-  const appliancesArray = [
-    ...new Set(array.flatMap((recipe) => recipe.appliance).sort()),
+  let appliancesArray = [
+    ...new Set(arrayOfRecipes.flatMap((recipe) => recipe.appliance).sort()),
   ];
 
-  const ustensilsArray = [
-    ...new Set(array.flatMap((recipe) => recipe.ustensils).sort()),
+  let ustensilsArray = [
+    ...new Set(arrayOfRecipes.flatMap((recipe) => recipe.ustensils).sort()),
   ];
 
   ingredientsArray.forEach((ingredient) => {
@@ -35,7 +38,8 @@ export function displayComboBox(array) {
     datalistUstensils.innerHTML += `<option value="${ustensil}"${ustensil}</option>`;
   });
 
-  console.log(ingredientsArray);
-  console.log(appliancesArray);
-  console.log(ustensilsArray);
+  // console.log(ingredientsArray);
+  // console.log(arrayOfRecipes);
+  // console.log(appliancesArray);
+  // console.log(ustensilsArray);
 }
