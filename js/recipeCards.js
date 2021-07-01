@@ -1,29 +1,30 @@
 import { displayComboBox } from "./comboBox.js";
 
-export function displayRecipes(arrayRecipe) {
-  console.log(arrayRecipe);
+/**
+ *
+ * @param {*} arrayOfRecipes array for displaying recipe
+ */
+export function displayRecipes(arrayOfRecipes) {
+  // console.log(arrayOfRecipes);
   let mainDisplayRecipes = document.querySelector("#displayRecipes");
-  while (mainDisplayRecipes.firstChild) {
-    mainDisplayRecipes.removeChild(mainDisplayRecipes.firstChild);
-  }
+
   mainDisplayRecipes.innerHTML = "";
 
-  if (arrayRecipe.length === 0) {
+  if (arrayOfRecipes.length === 0) {
     mainDisplayRecipes.innerHTML = `<p class="text-center h3">Aucune recette ne correspond à votre critère… vous pouvez
 chercher "tarte aux pommes", "poisson", etc.</p>`;
   }
-  arrayRecipe.forEach((recipe) => {
+  arrayOfRecipes.forEach((recipe) => {
     const articleRecipes = document.createElement("article");
     articleRecipes.classList.add(
       "card",
       "col-md-6",
       "col-xl-4",
       "mb-4",
-      "border",
-      "border-danger"
+      "articleCard"
     );
-    articleRecipes.innerHTML = `<img class="card-img-top bg-color" src="" alt="" width="auto" height="200px">
-                                <div class="card-body border border-dark g-0">
+    articleRecipes.innerHTML = `<img class="card-img-top bg-color src="" alt="" width="auto" height="200px">
+                                <div class="card-body g-0">
                                     <div class="row">
                                     <h5 class="col-9 card-title g-0">${
                                       recipe.name
@@ -51,5 +52,5 @@ chercher "tarte aux pommes", "poisson", etc.</p>`;
                                 </div>`;
     mainDisplayRecipes.appendChild(articleRecipes);
   });
-  displayComboBox(arrayRecipe);
+  displayComboBox(arrayOfRecipes);
 }
