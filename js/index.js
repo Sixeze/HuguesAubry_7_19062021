@@ -10,6 +10,7 @@ let selectedIngredient = [];
 let selectedAppliance = [];
 let selectedUstensil = [];
 let filteredRecipe = [];
+let arrayforAllTag = [];
 
 // DOM elements for index
 const searchBar = document.querySelector(".inputSearchBar");
@@ -43,29 +44,34 @@ searchBar.addEventListener("input", (e) => {
  */
 ingredientInput.addEventListener("input", (e) => {
   onInput(e, selectedIngredient);
-  filteredIngredientToRecipe(selectedIngredient);
+
+  // tagBoxContainer.innerHTML = "";
+
   displayTagElement(selectedIngredient, "bg-primary", ingredientInput);
+  filteredIngredientToRecipe(selectedIngredient);
   displayRecipes(newRecipes);
 
-  selectedIngredient = [];
+  // selectedIngredient = [];
 });
 
 applianceInput.addEventListener("input", (e) => {
   onInput(e, selectedAppliance);
+  // tagBoxContainer.innerHTML = "";
   displayTagElement(selectedAppliance, "bg-success", applianceInput);
   filteredApplianceToRecipe(selectedAppliance);
   displayRecipes(newRecipes);
 
-  selectedIngredient = [];
+  // selectedAppliance = [];
 });
 
 ustensilInput.addEventListener("input", (e) => {
   onInput(e, selectedUstensil);
+  // tagBoxContainer.innerHTML = "";
   displayTagElement(selectedUstensil, "bg-danger", ustensilInput);
   filteredUstensilToRecipe(selectedUstensil);
   displayRecipes(newRecipes);
 
-  selectedIngredient = [];
+  // selectedUstensil = [];
 });
 
 /**
@@ -77,6 +83,8 @@ function onInput(e, arrayForTag) {
   let input = e.target;
   let inputTag = input.value.toLowerCase();
   arrayForTag.push(inputTag);
+
+  input.value = "";
 }
 /**
  *
@@ -86,10 +94,11 @@ function filteredIngredientToRecipe(arrayForTag) {
   filteredRecipe = [];
   newRecipes.forEach((recipe) => {
     recipe.ingredients.forEach((i) => {
-      let ingredient = i.ingredient;
-      if (ingredient.toLowerCase().indexOf(arrayForTag) !== -1) {
+      let ingredient = i.ingredient.toLowerCase();
+      if (ingredient.indexOf(arrayForTag) !== -1) {
         newRecipes = [];
         filteredRecipe.push(recipe);
+        // console.log(recipe);
         newRecipes = filteredRecipe;
       }
     });
@@ -128,8 +137,11 @@ function filteredUstensilToRecipe(arrayForTag) {
  */
 
 function displayTagElement(arrayForTag, color, input) {
-  // tagBoxContainer.innerHTML = "";
-
+  console.log("arrayForTag :", arrayForTag);
+  console.log("selectedIngredient :", selectedIngredient);
+  console.log("selectedAppliance :", selectedAppliance);
+  console.log("selectedUstensil :", selectedUstensil);
+  tagBoxContainer.innerHTML = "";
   arrayForTag.forEach((elt) => {
     tagBoxContainer.innerHTML += `<button type="button" class="btn ${color} text-white mx-1">
                                     ${elt} <img src="img/close.svg" alt="close" class="mx-1">
@@ -151,6 +163,7 @@ function displayTagElement(arrayForTag, color, input) {
       })
     );
   });
+  // console.log(tagBoxContainer.childNodes);
 }
 
 // show Recipe open Page
