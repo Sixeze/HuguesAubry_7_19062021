@@ -141,6 +141,7 @@ function displayTagElement(arrayForTag, color, input) {
   console.log("selectedIngredient :", selectedIngredient);
   console.log("selectedAppliance :", selectedAppliance);
   console.log("selectedUstensil :", selectedUstensil);
+
   tagBoxContainer.innerHTML = "";
   arrayForTag.forEach((elt) => {
     tagBoxContainer.innerHTML += `<button type="button" class="btn ${color} text-white mx-1">
