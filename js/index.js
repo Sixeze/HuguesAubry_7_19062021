@@ -45,33 +45,25 @@ searchBar.addEventListener("input", (e) => {
 ingredientInput.addEventListener("input", (e) => {
   onInput(e, selectedIngredient);
 
-  // tagBoxContainer.innerHTML = "";
-
-  displayTagElement(selectedIngredient, "bg-primary", ingredientInput);
+  displayTagElement();
   filteredIngredientToRecipe(selectedIngredient);
   displayRecipes(newRecipes);
-
-  // selectedIngredient = [];
 });
 
 applianceInput.addEventListener("input", (e) => {
   onInput(e, selectedAppliance);
-  // tagBoxContainer.innerHTML = "";
-  displayTagElement(selectedAppliance, "bg-success", applianceInput);
+
+  displayTagElement();
   filteredApplianceToRecipe(selectedAppliance);
   displayRecipes(newRecipes);
-
-  // selectedAppliance = [];
 });
 
 ustensilInput.addEventListener("input", (e) => {
   onInput(e, selectedUstensil);
-  // tagBoxContainer.innerHTML = "";
-  displayTagElement(selectedUstensil, "bg-danger", ustensilInput);
+
+  displayTagElement();
   filteredUstensilToRecipe(selectedUstensil);
   displayRecipes(newRecipes);
-
-  // selectedUstensil = [];
 });
 
 /**
@@ -131,41 +123,58 @@ function filteredUstensilToRecipe(arrayForTag) {
 
 /**
  * function for display tag
- * @param {*} arrayForTag array for ingredient/appliance/ustensils
- * @param {*} color css of bg color of element ingredient/appliance/ustensils
- * @param {*} input html element for input ingredient/appliance/ustensils
  */
 
-function displayTagElement(arrayForTag, color, input) {
-  console.log("arrayForTag :", arrayForTag);
-  console.log("selectedIngredient :", selectedIngredient);
-  console.log("selectedAppliance :", selectedAppliance);
-  console.log("selectedUstensil :", selectedUstensil);
+function displayTagElement() {
+  arrayforAllTag = [selectedIngredient, selectedAppliance, selectedUstensil];
+  console.log("arrayforAllTag :", arrayforAllTag);
 
   tagBoxContainer.innerHTML = "";
-  arrayForTag.forEach((elt) => {
-    tagBoxContainer.innerHTML += `<button type="button" class="btn ${color} text-white mx-1">
-                                    ${elt} <img src="img/close.svg" alt="close" class="mx-1">
-                                  </button>`;
-    input.value = "";
 
-    let tagBtn = document.querySelectorAll(".btn");
-    tagBtn.forEach((btn) =>
-      btn.addEventListener("click", () => {
-        arrayForTag.splice(arrayForTag.indexOf(elt), 1);
+  for (let i = 0; i < arrayforAllTag.length; i++) {
+    console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
+    for (let j = 0; j < arrayforAllTag[i].length; j++) {
+      console.log("i = ", i, "j = ", arrayforAllTag[i][j], j);
+      let tag = arrayforAllTag[i][j];
+      let color;
+      if (i === 0) {
+        color = "btn-primary";
+      }
+      if (i === 1) {
+        color = "btn-success";
+      }
+      if (i === 2) {
+        color = "btn-danger";
+      }
 
-        tagBoxContainer.removeChild(btn);
-        displayRecipes(newRecipes);
+      tagBoxContainer.innerHTML += `<button type="button" class="btn ${color}  text-white mx-1">
+                                     ${tag} <img src="img/close.svg" alt="close" class="mx-1">
+                                     </button>`;
 
-        if (tagBoxContainer.innerHTML === "") {
-          newRecipes = allRecipes;
-          displayRecipes(newRecipes);
-        }
-      })
-    );
-  });
-  // console.log(tagBoxContainer.childNodes);
+      let tagBtn = document.querySelectorAll(".btn");
+      tagBtn.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          console.log(arrayforAllTag[i][j]);
+          let nbr = arrayforAllTag[i][j];
+          var tab = arrayforAllTag[i];
+          tab = tab.filter((item) => item !== nbr);
+          console.log(tab);
+
+          // tagBoxContainer.removeChild(btn);
+
+          if (tagBoxContainer.innerHTML === "") {
+            newRecipes = allRecipes;
+            displayRecipes(newRecipes);
+          }
+        })
+      );
+    }
+  }
 }
+// console.log("arrayForTag :", arrayForTag);
+// console.log("selectedIngredient :", selectedIngredient);
+// console.log("selectedAppliance :", selectedAppliance);
+// console.log("selectedUstensil :", selectedUstensil);
 
 // show Recipe open Page
 displayRecipes(allRecipes);
