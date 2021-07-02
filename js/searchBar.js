@@ -28,3 +28,4 @@ export function recipeFilter(value, array, newRecipes) {
     }
   }
 }
+//search bar a modifier pour algo-2
