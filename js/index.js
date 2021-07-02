@@ -10,6 +10,7 @@ let selectedIngredient = [];
 let selectedAppliance = [];
 let selectedUstensil = [];
 let filteredRecipe = [];
+let arrayforAllTag = [];
 
 // DOM elements for index
 const searchBar = document.querySelector(".inputSearchBar");
@@ -43,29 +44,26 @@ searchBar.addEventListener("input", (e) => {
  */
 ingredientInput.addEventListener("input", (e) => {
   onInput(e, selectedIngredient);
-  filteredIngredientToRecipe(selectedIngredient);
-  displayTagElement(selectedIngredient, "bg-primary", ingredientInput);
-  displayRecipes(newRecipes);
 
-  selectedIngredient = [];
+  displayTagElement();
+  filteredIngredientToRecipe(selectedIngredient);
+  displayRecipes(newRecipes);
 });
 
 applianceInput.addEventListener("input", (e) => {
   onInput(e, selectedAppliance);
-  displayTagElement(selectedAppliance, "bg-success", applianceInput);
+
+  displayTagElement();
   filteredApplianceToRecipe(selectedAppliance);
   displayRecipes(newRecipes);
-
-  selectedIngredient = [];
 });
 
 ustensilInput.addEventListener("input", (e) => {
   onInput(e, selectedUstensil);
-  displayTagElement(selectedUstensil, "bg-danger", ustensilInput);
+
+  displayTagElement();
   filteredUstensilToRecipe(selectedUstensil);
   displayRecipes(newRecipes);
-
-  selectedIngredient = [];
 });
 
 /**
@@ -77,6 +75,8 @@ function onInput(e, arrayForTag) {
   let input = e.target;
   let inputTag = input.value.toLowerCase();
   arrayForTag.push(inputTag);
+
+  input.value = "";
 }
 /**
  *
@@ -86,10 +86,11 @@ function filteredIngredientToRecipe(arrayForTag) {
   filteredRecipe = [];
   newRecipes.forEach((recipe) => {
     recipe.ingredients.forEach((i) => {
-      let ingredient = i.ingredient;
-      if (ingredient.toLowerCase().indexOf(arrayForTag) !== -1) {
+      let ingredient = i.ingredient.toLowerCase();
+      if (ingredient.indexOf(arrayForTag) !== -1) {
         newRecipes = [];
         filteredRecipe.push(recipe);
+        // console.log(recipe);
         newRecipes = filteredRecipe;
       }
     });
@@ -122,36 +123,58 @@ function filteredUstensilToRecipe(arrayForTag) {
 
 /**
  * function for display tag
- * @param {*} arrayForTag array for ingredient/appliance/ustensils
- * @param {*} color css of bg color of element ingredient/appliance/ustensils
- * @param {*} input html element for input ingredient/appliance/ustensils
  */
 
-function displayTagElement(arrayForTag, color, input) {
-  // tagBoxContainer.innerHTML = "";
+function displayTagElement() {
+  arrayforAllTag = [selectedIngredient, selectedAppliance, selectedUstensil];
+  console.log("arrayforAllTag :", arrayforAllTag);
 
-  arrayForTag.forEach((elt) => {
-    tagBoxContainer.innerHTML += `<button type="button" class="btn ${color} text-white mx-1">
-                                    ${elt} <img src="img/close.svg" alt="close" class="mx-1">
-                                  </button>`;
-    input.value = "";
+  tagBoxContainer.innerHTML = "";
 
-    let tagBtn = document.querySelectorAll(".btn");
-    tagBtn.forEach((btn) =>
-      btn.addEventListener("click", () => {
-        arrayForTag.splice(arrayForTag.indexOf(elt), 1);
+  for (let i = 0; i < arrayforAllTag.length; i++) {
+    console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
+    for (let j = 0; j < arrayforAllTag[i].length; j++) {
+      console.log("i = ", i, "j = ", arrayforAllTag[i][j], j);
+      let tag = arrayforAllTag[i][j];
+      let color;
+      if (i === 0) {
+        color = "btn-primary";
+      }
+      if (i === 1) {
+        color = "btn-success";
+      }
+      if (i === 2) {
+        color = "btn-danger";
+      }
 
-        tagBoxContainer.removeChild(btn);
-        displayRecipes(newRecipes);
+      tagBoxContainer.innerHTML += `<button type="button" class="btn ${color}  text-white mx-1">
+                                     ${tag} <img src="img/close.svg" alt="close" class="mx-1">
+                                     </button>`;
 
-        if (tagBoxContainer.innerHTML === "") {
-          newRecipes = allRecipes;
-          displayRecipes(newRecipes);
-        }
-      })
-    );
-  });
+      let tagBtn = document.querySelectorAll(".btn");
+      tagBtn.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          console.log(arrayforAllTag[i][j]);
+          let nbr = arrayforAllTag[i][j];
+          var tab = arrayforAllTag[i];
+          tab = tab.filter((item) => item !== nbr);
+          console.log(tab);
+
+          // tagBoxContainer.removeChild(btn);
+
+          if (tagBoxContainer.innerHTML === "") {
+            newRecipes = allRecipes;
+            displayRecipes(newRecipes);
+          }
+        })
+      );
+    }
+  }
 }
+// console.log("arrayForTag :", arrayForTag);
+// console.log("selectedIngredient :", selectedIngredient);
+// console.log("selectedAppliance :", selectedAppliance);
+// console.log("selectedUstensil :", selectedUstensil);
 
 // show Recipe open Page
 displayRecipes(allRecipes);
