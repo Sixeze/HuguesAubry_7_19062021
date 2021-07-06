@@ -46,41 +46,11 @@ ingredientInput.addEventListener("input", (e) => {
   onInput(e, selectedIngredient);
   displayTagElement();
   filteredIngredientToRecipe(selectedIngredient);
+  console.log("selectedIngredient", selectedIngredient);
   closeTag();
+
   displayRecipes(newRecipes);
 });
-
-/**
- *
- * @param {*} arrayForTag array for ingredient/appliance/ustensils
- */
-function filteredIngredientToRecipe(arrayForTag) {
-  console.log("newRecipes :", newRecipes);
-  console.log("filteredRecipe :", filteredRecipe);
-
-  newRecipes.forEach((recipe) => {
-    recipe.ingredients.forEach((i) => {
-      let ingredient = i.ingredient.toLowerCase();
-
-      for (let a = 0; a < arrayForTag.length; a++) {
-        if (ingredient.includes(arrayForTag[a])) {
-          // console.log("recipe.name");
-
-          newRecipes = [];
-          filteredRecipe.push(recipe);
-
-          console.log("newRecipes :", newRecipes);
-          console.log("filteredRecipe :", filteredRecipe);
-          newRecipes = filteredRecipe;
-        }
-      }
-    });
-  });
-  filteredRecipe = [];
-  console.log("newRecipes :", newRecipes);
-  console.log("filteredRecipe :", filteredRecipe);
-  console.log("fin de la fonction");
-}
 
 // filteredRecipe.filter((recipe) => !recipe.ingredient.includes(arrayForTag[a]));
 
@@ -114,6 +84,31 @@ function onInput(e, arrayForTag) {
   input.value = "";
 }
 
+/**
+ *
+ * @param {*} arrayForTag array for ingredient/appliance/ustensils
+ */
+function filteredIngredientToRecipe(arrayForTag) {
+  console.log("newRecipes :", newRecipes);
+  console.log("filteredRecipe :", filteredRecipe);
+
+  newRecipes.forEach((recipe) => {
+    recipe.ingredients.forEach((i) => {
+      let ingredient = i.ingredient.toLowerCase();
+      multipleElementInArray(ingredient, arrayForTag, recipe);
+    });
+  });
+
+  filterUniqueRecipe(filteredRecipe);
+
+  console.log("filteredRecipe :", filteredRecipe);
+
+  filteredRecipe = [];
+  console.log("newRecipes :", newRecipes);
+  console.log("filteredRecipe :", filteredRecipe);
+  console.log("fin de la fonction");
+}
+
 function filteredApplianceToRecipe(arrayForTag) {
   filteredRecipe = [];
   newRecipes.forEach((recipe) => {
@@ -126,27 +121,56 @@ function filteredApplianceToRecipe(arrayForTag) {
 }
 
 function filteredUstensilToRecipe(arrayForTag) {
-  filteredRecipe = [];
   newRecipes.forEach((recipe) => {
     recipe.ustensils.forEach((ustensil) => {
-      if (ustensil.toLowerCase().indexOf(arrayForTag) !== -1) {
-        newRecipes = [];
-        filteredRecipe.push(recipe);
-        newRecipes = filteredRecipe;
-      }
+      multipleElementInArray(ustensil, arrayForTag, recipe);
     });
   });
+  filterUniqueRecipe(filteredRecipe);
+  filteredRecipe = [];
+}
+/**
+ *
+ * @param {array of recipe Filter} filteredRecipe
+ */
+function filterUniqueRecipe(filteredRecipe) {
+  let protofilter = filteredRecipe.slice().sort();
+  for (let f = 0; f < protofilter.length; f++) {
+    if (protofilter[f + 1] == protofilter[f]) {
+      console.log(protofilter[f]);
+      newRecipes = [];
+      newRecipes.push(protofilter[f]);
+    }
+  }
+}
+
+/**
+ *
+ * @param {element compare} element
+ * @param {array of tag selected} arrayForTag
+ * @param {recipe to display} recipe
+ */
+function multipleElementInArray(element, arrayForTag, recipe) {
+  for (let a = 0; a < arrayForTag.length; a++) {
+    if (element.includes(arrayForTag[a])) {
+      // console.log("recipe.name");
+      console.log(arrayForTag[a]);
+      // console.log(recipe);
+      newRecipes = [];
+
+      // console.log("filteredRecipe :", filteredRecipe);
+      filteredRecipe.push(recipe);
+      newRecipes = filteredRecipe;
+    }
+  }
 }
 
 /**
  * function for display tag
  */
-
 function displayTagElement() {
   // console.log("arrayforAllTag :", arrayforAllTag);
-
   tagBoxContainer.innerHTML = "";
-
   for (let i = 0; i < arrayforAllTag.length; i++) {
     // console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
     let color;
@@ -159,7 +183,6 @@ function displayTagElement() {
     if (i === 2) {
       color = "btn-danger";
     }
-
     for (let j = 0; j < arrayforAllTag[i].length; j++) {
       // console.log("i = ", i, "j = ", arrayforAllTag[i][j], j);
       let tag = arrayforAllTag[i][j];
@@ -171,6 +194,9 @@ function displayTagElement() {
   }
 }
 
+/**
+ * function for remove tagSelected
+ */
 function closeTag() {
   let tagBtn = document.querySelectorAll(".btn");
   tagBtn.forEach((btn) => {
@@ -181,17 +207,18 @@ function closeTag() {
         let array = arrayforAllTag[a];
         for (let t = 0; t < arrayforAllTag[a].length; t++) {
           let tag = arrayforAllTag[a][t];
-          console.log(tag);
+          // console.log(tag);
           let indexTag = array.indexOf(tag);
           console.log(indexTag);
           array.splice(indexTag, 1);
         }
       }
-      console.log(arrayforAllTag);
+      // console.log(arrayforAllTag);
       if (tagBoxContainer.innerHTML === "") {
         newRecipes = allRecipes;
         displayRecipes(newRecipes);
       }
+      console.log("selectedIngredient", selectedIngredient);
     });
   });
 }
