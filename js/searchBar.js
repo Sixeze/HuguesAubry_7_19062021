@@ -1,8 +1,8 @@
-export function recipeFilter(value, array, newRecipes) {
+export function recipeFilter(value, allRecipes, filteredRecipes) {
   console.time("recipeFilter");
   let word = value.toLowerCase();
   // console.log(word);
-  for (let recipe of array) {
+  for (let recipe of allRecipes) {
     let match = true;
     let listOfIngredients = [];
     let listOfUstensils = [];
@@ -24,7 +24,7 @@ export function recipeFilter(value, array, newRecipes) {
     }
 
     if (match) {
-      newRecipes.push(recipe);
+      filteredRecipes.push(recipe);
     }
   }
   console.timeEnd("recipeFilter");
