@@ -1,31 +1,25 @@
-export function recipeFilter(value, array, newRecipes) {
+export function recipeFilter(value, allRecipes, filteredRecipes) {
+  console.time("recipeFilter");
   let word = value.toLowerCase();
-  console.log(word);
-  for (let recipe of array) {
-    let match = true;
-    let listOfIngredients = [];
-    let listOfUstensils = [];
-    for (let i of recipe.ingredients) {
-      listOfIngredients.push(i.ingredient.toLowerCase());
-      // console.log(listOfIngredients);
-    }
-
-    for (let ustensil of recipe.ustensils) {
-      listOfUstensils.push(ustensil.toLowerCase);
-    }
-    if (
-      !recipe.description.toLowerCase().includes(word) &&
-      !recipe.name.toLowerCase().includes(word) &&
-      !listOfIngredients.join(" ").includes(word) &&
-      !listOfUstensils.join(" ").includes(word)
-    ) {
-      match = false;
-    }
-
-    if (match) {
-      newRecipes.push(recipe);
-      console.log(newRecipes);
-    }
-  }
+  // console.log(word);
+  filteredRecipes = allRecipes.filter((recipe) => {
+    return (
+      recipe.description.toLowerCase().includes(word) ||
+      recipe.name.toLowerCase().includes(word) ||
+      recipe.ingredients
+        .map((ingredient) => ingredient.ingredient)
+        .join("")
+        .toLowerCase()
+        .includes(word) ||
+      recipe.ustensils
+        .map((ustensil) => ustensil)
+        .join("")
+        .toLowerCase()
+        .includes(word) ||
+      recipe.appliance.toLowerCase().includes(word)
+    );
+  });
+  console.timeEnd("recipeFilter");
 }
+
 //search bar a modifier pour algo-2
