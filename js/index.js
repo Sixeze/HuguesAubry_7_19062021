@@ -25,9 +25,10 @@ const ustensilInput = document.querySelector("#ustensils");
  */
 searchBar.addEventListener("input", (e) => {
   let inputValue = e.target.value;
+  filteredRecipes = [];
   if (inputValue.length > 2) {
-    mainDisplayRecipes.innerHTML = "";
-    filteredRecipes = [];
+    // mainDisplayRecipes.innerHTML = "";
+
     recipeFilter(inputValue, allRecipes, filteredRecipes);
     displayRecipes(filteredRecipes);
   }
