@@ -2,8 +2,10 @@ export function recipeFilter(value, allRecipes, filteredRecipes) {
   console.time("recipeFilter");
   let word = value.toLowerCase();
   console.log(word);
-  console.log(filteredRecipes);
+
   console.log(allRecipes);
+  filteredRecipes = [];
+  console.log(filteredRecipes);
   filteredRecipes = allRecipes.filter((recipe) => {
     return (
       recipe.description.toLowerCase().includes(word) ||

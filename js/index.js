@@ -25,11 +25,12 @@ const ustensilInput = document.querySelector("#ustensils");
  */
 searchBar.addEventListener("input", (e) => {
   let inputValue = e.target.value;
-  filteredRecipes = [];
+  // filteredRecipes = [];
   if (inputValue.length > 2) {
     // mainDisplayRecipes.innerHTML = "";
 
     recipeFilter(inputValue, allRecipes, filteredRecipes);
+    console.log(filteredRecipes);
     displayRecipes(filteredRecipes);
   }
   if (inputValue.length <= 2 && tagBoxContainer.innerHTML === "") {
