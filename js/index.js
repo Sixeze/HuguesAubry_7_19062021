@@ -1,6 +1,7 @@
 import { displayRecipes } from "./recipeCards.js";
-import { recipeFilter } from "./searchBar.js";
 import { recipes } from "./recipes.js";
+
+// import { recipeFilter } from "./searchBar.js";
 
 // import { recipeClass } from "./recipesClass.js";
 
@@ -27,9 +28,27 @@ searchBar.addEventListener("input", (e) => {
   let inputValue = e.target.value;
   // filteredRecipes = [];
   if (inputValue.length > 2) {
-    // mainDisplayRecipes.innerHTML = "";
+    mainDisplayRecipes.innerHTML = "";
 
-    recipeFilter(inputValue, allRecipes, filteredRecipes);
+    // recipeFilter(inputValue, filteredRecipes);
+    let word = inputValue.toLowerCase();
+    filteredRecipes = filteredRecipes.filter((recipe) => {
+      return (
+        recipe.description.toLowerCase().includes(word) ||
+        recipe.name.toLowerCase().includes(word) ||
+        recipe.ingredients
+          .map((ingredient) => ingredient.ingredient)
+          .join("")
+          .toLowerCase()
+          .includes(word) ||
+        recipe.ustensils
+          .map((ustensil) => ustensil)
+          .join("")
+          .toLowerCase()
+          .includes(word) ||
+        recipe.appliance.toLowerCase().includes(word)
+      );
+    });
     console.log(filteredRecipes);
     displayRecipes(filteredRecipes);
   }
