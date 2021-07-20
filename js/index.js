@@ -1,11 +1,15 @@
+import { allRecipes } from "./searchBar.js";
+import { displayAllRecipes } from "./searchBar.js";
 import { displayRecipes } from "./recipeCards.js";
+import { filteredRecipes } from "./searchBar.js";
 import { recipeFilter } from "./searchBar.js";
-import { recipes } from "./recipes.js";
+
+// import { recipes } from "./recipes.js";
 
 // import { recipeClass } from "./recipesClass.js";
 
-const allRecipes = recipes;
-let filteredRecipes = allRecipes;
+// const allRecipes = recipes;
+// let filteredRecipes = [...allRecipes];
 let selectedIngredients = [];
 let selectedAppliances = [];
 let selectedUstensils = [];
@@ -24,19 +28,24 @@ const ustensilInput = document.querySelector("#ustensils");
  * addEventlistener for input searchBar
  */
 searchBar.addEventListener("input", (e) => {
-  let inputValue = e.target.value;
-  // filteredRecipes = [];
+  let inputValue = e.target.value.toLowerCase();
+  console.log(inputValue.length);
+  console.log(inputValue.length - 1);
+  // console.log(searchBar.value);
+  if (inputValue.length - 1 < inputValue.length) {
+    console.log("polp");
+  }
+
   if (inputValue.length > 2) {
     mainDisplayRecipes.innerHTML = "";
+    // filterRecipe(inputValue);
+    recipeFilter(inputValue);
 
-    recipeFilter(inputValue, filteredRecipes);
-
-    console.log(filteredRecipes);
+    console.log("tableau apres appel fonction : ", filteredRecipes);
     // displayRecipes(filteredRecipes);
   }
   if (inputValue.length <= 2 && tagBoxContainer.innerHTML === "") {
-    filteredRecipes = allRecipes;
-    displayRecipes(filteredRecipes);
+    displayAllRecipes();
   }
 });
 
@@ -66,9 +75,10 @@ ustensilInput.addEventListener("input", (e) => {
 function onInput(e, arrayForTag) {
   let input = e.target;
   let inputTag = input.value.toLowerCase();
-  arrayForTag.push(inputTag);
-
-  input.value = "";
+  if (inputTag.length >= 3) {
+    arrayForTag.push(inputTag);
+    input.value = "";
+  }
 }
 
 /**
@@ -102,8 +112,8 @@ function displayTagElement() {
                                      ${tag} <img src="img/close.svg" alt="close" class="mx-1">
                                      </button>`;
 
-      console.log(filteredRecipes);
-      filterRecipe(tag);
+      recipeFilter(tag);
+      // filterRecipe(tag);
     }
     closeTag(arrayforAllTag[i]);
   }
@@ -130,9 +140,9 @@ function closeTag(array) {
       btn.remove();
 
       array.forEach((tag) => {
-        // console.log(tag);
+        console.log("log du tag a la supp :", tag);
         filteredRecipes = allRecipes;
-        filterRecipe(tag);
+        recipeFilter(tag);
       });
 
       if (tagBoxContainer.innerHTML === "") {
@@ -141,37 +151,39 @@ function closeTag(array) {
           (selectedUstensils = []);
 
         if (searchBar.value === "") {
-          filteredRecipes = allRecipes;
-          displayRecipes(filteredRecipes);
+          displayAllRecipes();
         }
       }
     });
   });
 }
 
-/**
- *
- * @param {element array} tag
- */
-function filterRecipe(tag) {
-  filteredRecipes = filteredRecipes.filter((recipe) => {
-    return (
-      recipe.ingredients
-        .map((ingredient) => ingredient.ingredient)
-        .join("")
-        .toLowerCase()
-        .includes(tag) ||
-      recipe.ustensils
-        .map((ustensil) => ustensil)
-        .join("")
-        .toLowerCase()
-        .includes(tag) ||
-      recipe.appliance.toLowerCase().includes(tag)
-    );
-  });
-  // console.log(filteredRecipes);
-  displayRecipes(filteredRecipes);
-}
+// /**
+//  *
+//  * @param {element array} tag
+//  */
+// function filterRecipe(tag) {
+//   console.log("avant la selection du tag", filteredRecipes);
+//   filteredRecipes = filteredRecipes.filter((recipe) => {
+//     return (
+//       recipe.description.toLowerCase().includes(tag) ||
+//       recipe.name.toLowerCase().includes(tag) ||
+//       recipe.ingredients
+//         .map((ingredient) => ingredient.ingredient)
+//         .join("")
+//         .toLowerCase()
+//         .includes(tag) ||
+//       recipe.ustensils
+//         .map((ustensil) => ustensil)
+//         .join("")
+//         .toLowerCase()
+//         .includes(tag) ||
+//       recipe.appliance.toLowerCase().includes(tag)
+//     );
+//   });
+//   console.log("apres la selection du tag", filteredRecipes);
+//   displayRecipes(filteredRecipes);
+// }
 
 // show Recipe open Page
 displayRecipes(filteredRecipes);

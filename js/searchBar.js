@@ -1,8 +1,12 @@
 import { displayRecipes } from "./recipeCards.js";
+import { recipes } from "./recipes.js";
 
-export function recipeFilter(inputValue, filteredRecipes) {
-  let word = inputValue.toLowerCase();
-  console.log(filteredRecipes);
+export let allRecipes = recipes;
+export let filteredRecipes = [...allRecipes];
+
+export function recipeFilter(word) {
+  console.log("tableau avant appel fonction : ", filteredRecipes);
+
   filteredRecipes = filteredRecipes.filter((recipe) => {
     return (
       recipe.description.toLowerCase().includes(word) ||
@@ -20,8 +24,14 @@ export function recipeFilter(inputValue, filteredRecipes) {
       recipe.appliance.toLowerCase().includes(word)
     );
   });
-  console.log(filteredRecipes);
+
+  console.log("tableau dans la fonction : ", filteredRecipes);
   displayRecipes(filteredRecipes);
 }
 
 //search bar a modifier pour algo-2
+
+export function displayAllRecipes() {
+  filteredRecipes = allRecipes;
+  displayRecipes(filteredRecipes);
+}
