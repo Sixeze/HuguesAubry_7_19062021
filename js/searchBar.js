@@ -4,9 +4,12 @@ import { recipes } from "./recipes.js";
 export let allRecipes = recipes;
 export let filteredRecipes = [...allRecipes];
 
+/**
+ *
+ * @param {string} word
+ */
 export function recipeFilter(word) {
-  console.log("tableau avant appel fonction : ", filteredRecipes);
-
+  // console.log("tableau avant appel fonction : ", filteredRecipes);
   filteredRecipes = filteredRecipes.filter((recipe) => {
     return (
       recipe.description.toLowerCase().includes(word) ||
@@ -25,13 +28,21 @@ export function recipeFilter(word) {
     );
   });
 
-  console.log("tableau dans la fonction : ", filteredRecipes);
+  // console.log("tableau dans la fonction : ", filteredRecipes);
   displayRecipes(filteredRecipes);
 }
 
-//search bar a modifier pour algo-2
-
 export function displayAllRecipes() {
-  filteredRecipes = allRecipes;
+  filteredRecipes = [...allRecipes];
   displayRecipes(filteredRecipes);
+}
+
+/**
+ *
+ * @param {string} word
+ */
+export function recipesFilterForSuppValue(word) {
+  filteredRecipes = [...allRecipes];
+
+  recipeFilter(word);
 }

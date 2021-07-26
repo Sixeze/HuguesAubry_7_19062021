@@ -3,16 +3,17 @@ import { displayAllRecipes } from "./searchBar.js";
 import { displayRecipes } from "./recipeCards.js";
 import { filteredRecipes } from "./searchBar.js";
 import { recipeFilter } from "./searchBar.js";
+import { recipesFilterForSuppValue } from "./searchBar.js";
 
-// import { recipes } from "./recipes.js";
-
-// import { recipeClass } from "./recipesClass.js";
-
-// const allRecipes = recipes;
-// let filteredRecipes = [...allRecipes];
 let selectedIngredients = [];
 let selectedAppliances = [];
 let selectedUstensils = [];
+let arrayForInputValue = [];
+let arrayforAllTag = [
+  selectedIngredients,
+  selectedAppliances,
+  selectedUstensils,
+];
 
 // DOM elements for index
 const searchBar = document.querySelector(".inputSearchBar");
@@ -29,23 +30,24 @@ const ustensilInput = document.querySelector("#ustensils");
  */
 searchBar.addEventListener("input", (e) => {
   let inputValue = e.target.value.toLowerCase();
-  console.log(inputValue.length);
-  console.log(inputValue.length - 1);
-  // console.log(searchBar.value);
-  if (inputValue.length - 1 < inputValue.length) {
-    console.log("polp");
-  }
 
   if (inputValue.length > 2) {
     mainDisplayRecipes.innerHTML = "";
-    // filterRecipe(inputValue);
     recipeFilter(inputValue);
+    // console.log("tableau apres appel fonction : ", filteredRecipes);
+    arrayForInputValue.push(inputValue);
+    console.log(arrayForInputValue);
 
-    console.log("tableau apres appel fonction : ", filteredRecipes);
-    // displayRecipes(filteredRecipes);
+    for (let a = 0; a < arrayForInputValue.length; a++) {
+      if (arrayForInputValue[a] < arrayForInputValue[a - 1]) {
+        recipesFilterForSuppValue(inputValue);
+      }
+    }
   }
-  if (inputValue.length <= 2 && tagBoxContainer.innerHTML === "") {
+  if (inputValue.length <= 2 && tagBoxContainer.innerHTML == "") {
     displayAllRecipes();
+    arrayForInputValue = [];
+    console.log("search et tagbox = rien ");
   }
 });
 
@@ -55,16 +57,19 @@ searchBar.addEventListener("input", (e) => {
 ingredientInput.addEventListener("input", (e) => {
   onInput(e, selectedIngredients);
   displayTagElement();
+  closeTag();
 });
 
 applianceInput.addEventListener("input", (e) => {
   onInput(e, selectedAppliances);
   displayTagElement();
+  closeTag();
 });
 
 ustensilInput.addEventListener("input", (e) => {
   onInput(e, selectedUstensils);
   displayTagElement();
+  closeTag();
 });
 
 /**
@@ -85,15 +90,9 @@ function onInput(e, arrayForTag) {
  * function for display tag
  */
 function displayTagElement() {
-  // console.log("arrayforAllTag :", arrayforAllTag);
   tagBoxContainer.innerHTML = "";
-  const arrayforAllTag = [
-    selectedIngredients,
-    selectedAppliances,
-    selectedUstensils,
-  ];
+  arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
   for (let i = 0; i < arrayforAllTag.length; i++) {
-    // console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
     let color;
     if (i === 0) {
       color = "btn-primary";
@@ -105,7 +104,6 @@ function displayTagElement() {
       color = "btn-danger";
     }
     for (let j = 0; j < arrayforAllTag[i].length; j++) {
-      // console.log("i = ", i, "j = ", arrayforAllTag[i][j], j);
       let tag = arrayforAllTag[i][j];
 
       tagBoxContainer.innerHTML += `<button type="button" value="${tag}" class="btn ${color}  text-white mx-1">
@@ -113,77 +111,58 @@ function displayTagElement() {
                                      </button>`;
 
       recipeFilter(tag);
-      // filterRecipe(tag);
     }
-    closeTag(arrayforAllTag[i]);
   }
 }
+function closeTag() {
+  if (searchBar.value != "") {
+    arrayforAllTag = [
+      selectedIngredients,
+      selectedAppliances,
+      selectedUstensils,
+      [searchBar.value],
+    ];
+  } else {
+    arrayforAllTag;
+  }
+  console.log("arrayforAllTag", arrayforAllTag);
 
-/**
- *
- * @param {object array} array
- */
-function closeTag(array) {
-  console.log(array);
   let tagBtn = document.querySelectorAll(".btn");
   tagBtn.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       let word = e.target.value;
-      // console.log(word);
-      const index = array.indexOf(word);
-      // console.log(index);
-      if (index > -1) {
-        array.splice(index, 1);
-      }
-      console.log(array.length);
+      console.log(btn, e.target.value);
 
-      btn.remove();
-
-      array.forEach((tag) => {
-        console.log("log du tag a la supp :", tag);
-        filteredRecipes = allRecipes;
-        recipeFilter(tag);
-      });
-
-      if (tagBoxContainer.innerHTML === "") {
-        (selectedIngredients = []),
-          (selectedAppliances = []),
-          (selectedUstensils = []);
-
-        if (searchBar.value === "") {
-          displayAllRecipes();
+      for (let i = 0; i < arrayforAllTag.length; i++) {
+        console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
+        let index = arrayforAllTag[i].indexOf(word);
+        console.log(index);
+        if (index > -1) {
+          arrayforAllTag[i].splice(index, 1);
+        }
+        console.log(arrayforAllTag);
+        btn.remove();
+        for (let j = 0; j < arrayforAllTag[i].length; j++) {
+          let Tag = arrayforAllTag[i][j];
+          recipesFilterForSuppValue(Tag);
         }
       }
+
+      if (searchBar.value <= 2 && tagBoxContainer.innerHTML === "") {
+        displayAllRecipes();
+        selectedIngredients = [];
+        selectedAppliances = [];
+        selectedUstensils = [];
+      }
+      // if (searchBar.value != "" && tagBoxContainer.innerHTML === "") {
+      //   recipesFilterForSuppValue(searchBar.value);
+      //   selectedIngredients = [];
+      //   selectedAppliances = [];
+      //   selectedUstensils = [];
+      // }
     });
   });
 }
-
-// /**
-//  *
-//  * @param {element array} tag
-//  */
-// function filterRecipe(tag) {
-//   console.log("avant la selection du tag", filteredRecipes);
-//   filteredRecipes = filteredRecipes.filter((recipe) => {
-//     return (
-//       recipe.description.toLowerCase().includes(tag) ||
-//       recipe.name.toLowerCase().includes(tag) ||
-//       recipe.ingredients
-//         .map((ingredient) => ingredient.ingredient)
-//         .join("")
-//         .toLowerCase()
-//         .includes(tag) ||
-//       recipe.ustensils
-//         .map((ustensil) => ustensil)
-//         .join("")
-//         .toLowerCase()
-//         .includes(tag) ||
-//       recipe.appliance.toLowerCase().includes(tag)
-//     );
-//   });
-//   console.log("apres la selection du tag", filteredRecipes);
-//   displayRecipes(filteredRecipes);
-// }
 
 // show Recipe open Page
 displayRecipes(filteredRecipes);
