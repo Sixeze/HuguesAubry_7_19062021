@@ -114,6 +114,10 @@ function displayTagElement() {
     }
   }
 }
+
+/**
+ *
+ */
 function closeTag() {
   if (searchBar.value != "") {
     arrayforAllTag = [
