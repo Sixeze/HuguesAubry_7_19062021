@@ -28,7 +28,6 @@ export function recipeFilter(word) {
     );
   });
 
-  // console.log("tableau dans la fonction : ", filteredRecipes);
   displayRecipes(filteredRecipes);
 }
 
