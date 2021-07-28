@@ -33,15 +33,31 @@ searchBar.addEventListener("input", (e) => {
   if (inputValue.length > 2) {
     mainDisplayRecipes.innerHTML = "";
     recipeFilter(inputValue);
+    console.log("input > 2", arrayforAllTag, filteredRecipes.length);
 
     if (inputValue < valueOfSearchBar) {
-      console.log(arrayforAllTag);
       recipesFilterForSuppValue(inputValue);
+      console.log("backSpace", arrayforAllTag, filteredRecipes.length);
     }
     valueOfSearchBar = inputValue;
   }
-  if (inputValue.length <= 2 && tagBoxContainer.innerHTML == "") {
-    displayAllRecipes();
+  if (inputValue.length <= 2) {
+    arrayforAllTag;
+    if (tagBoxContainer.innerHTML == "") {
+      displayAllRecipes();
+      console.log("if <2 tagBox vierge", filteredRecipes.length);
+    }
+    if (tagBoxContainer.innerHTML !== "") {
+      console.log(
+        "if <2 tagBox!vierge",
+        arrayforAllTag,
+        filteredRecipes.length
+      );
+      for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
+        let eltsValue = tagBoxContainer.childNodes[i];
+        recipesFilterForSuppValue(eltsValue.value);
+      }
+    }
   }
 });
 
@@ -85,14 +101,7 @@ function onInput(e, arrayForTag) {
  */
 function displayTagElement() {
   tagBoxContainer.innerHTML = "";
-  // arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
-  // if (searchBar.value != "") {
-  //   arrayforAllTag.push([searchBar.value]);
-  //   console.log("arrayforAllTag[4]", arrayforAllTag);
-  // } else {
-  //   arrayforAllTag;
-  //   console.log("arrayforAllTag[3]", arrayforAllTag);
-  // }
+  arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
 
   for (let i = 0; i < arrayforAllTag.length; i++) {
     let color;
@@ -105,9 +114,7 @@ function displayTagElement() {
     if (i === 2) {
       color = "btn-danger";
     }
-    // if (i === 3) {
-    //   color = "btn-warning";
-    // }
+
     for (let j = 0; j < arrayforAllTag[i].length; j++) {
       let tag = arrayforAllTag[i][j];
 
@@ -116,6 +123,7 @@ function displayTagElement() {
                                      </button>`;
 
       recipeFilter(tag);
+      console.log("display Tag", arrayforAllTag, filteredRecipes.length);
     }
   }
 }
@@ -125,11 +133,24 @@ function displayTagElement() {
  */
 function closeTag() {
   if (searchBar.value != "") {
-    arrayforAllTag.push([searchBar.value]);
-    console.log("arrayforAllTag[4]", arrayforAllTag);
+    arrayforAllTag = arrayforAllTag = [
+      selectedIngredients,
+      selectedAppliances,
+      selectedUstensils,
+      [searchBar.value],
+    ];
+    console.log(
+      "closeTag arrayforAllTag[4]",
+      arrayforAllTag,
+      filteredRecipes.length
+    );
   } else {
     arrayforAllTag;
-    console.log("arrayforAllTag[3]", arrayforAllTag);
+    console.log(
+      "closeTag arrayforAllTag[3]",
+      arrayforAllTag,
+      filteredRecipes.length
+    );
   }
 
   let tagBtn = document.querySelectorAll(".btn");
@@ -158,13 +179,7 @@ function closeTag() {
         selectedAppliances = [];
         selectedUstensils = [];
       }
-      // if (searchBar.value != "" && tagBoxContainer.innerHTML === "") {
-      //   recipesFilterForSuppValue(searchBar.value);
-      //   selectedIngredients = [];
-      //   selectedAppliances = [];
-      //   selectedUstensils = [];
-      // }
-      console.log("arrayforAllTag[x]", arrayforAllTag);
+      console.log("arrayforAllTag[x]", arrayforAllTag, filteredRecipes.length);
     });
   });
 }
