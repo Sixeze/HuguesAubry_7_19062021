@@ -1,4 +1,3 @@
-import { allRecipes } from "./searchBar.js";
 import { displayAllRecipes } from "./searchBar.js";
 import { displayRecipes } from "./recipeCards.js";
 import { filteredRecipes } from "./searchBar.js";
