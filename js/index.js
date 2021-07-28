@@ -1,4 +1,3 @@
-import { allRecipes } from "./searchBar.js";
 import { displayAllRecipes } from "./searchBar.js";
 import { displayRecipes } from "./recipeCards.js";
 import { filteredRecipes } from "./searchBar.js";
@@ -8,19 +7,18 @@ import { recipesFilterForSuppValue } from "./searchBar.js";
 let selectedIngredients = [];
 let selectedAppliances = [];
 let selectedUstensils = [];
-let arrayForInputValue = [];
 let arrayforAllTag = [
   selectedIngredients,
   selectedAppliances,
   selectedUstensils,
 ];
+let valueOfSearchBar = "";
 
 // DOM elements for index
 const searchBar = document.querySelector(".inputSearchBar");
-const mainDisplayRecipes = document.querySelector("#displayRecipes");
 const tagBoxContainer = document.querySelector("#tagBoxContainer");
+const mainDisplayRecipes = document.querySelector("#displayRecipes");
 
-// DOM elements for ingredients
 const ingredientInput = document.querySelector("#ingredients");
 const applianceInput = document.querySelector("#appliances");
 const ustensilInput = document.querySelector("#ustensils");
@@ -34,20 +32,31 @@ searchBar.addEventListener("input", (e) => {
   if (inputValue.length > 2) {
     mainDisplayRecipes.innerHTML = "";
     recipeFilter(inputValue);
-    // console.log("tableau apres appel fonction : ", filteredRecipes);
-    arrayForInputValue.push(inputValue);
-    console.log(arrayForInputValue);
+    console.log("input > 2", arrayforAllTag, filteredRecipes.length);
 
-    for (let a = 0; a < arrayForInputValue.length; a++) {
-      if (arrayForInputValue[a] < arrayForInputValue[a - 1]) {
-        recipesFilterForSuppValue(inputValue);
+    if (inputValue < valueOfSearchBar) {
+      recipesFilterForSuppValue(inputValue);
+      console.log("backSpace", arrayforAllTag, filteredRecipes.length);
+    }
+    valueOfSearchBar = inputValue;
+  }
+  if (inputValue.length <= 2) {
+    arrayforAllTag;
+    if (tagBoxContainer.innerHTML == "") {
+      displayAllRecipes();
+      console.log("if <2 tagBox vierge", filteredRecipes.length);
+    }
+    if (tagBoxContainer.innerHTML !== "") {
+      console.log(
+        "if <2 tagBox!vierge",
+        arrayforAllTag,
+        filteredRecipes.length
+      );
+      for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
+        let eltsValue = tagBoxContainer.childNodes[i];
+        recipesFilterForSuppValue(eltsValue.value);
       }
     }
-  }
-  if (inputValue.length <= 2 && tagBoxContainer.innerHTML == "") {
-    displayAllRecipes();
-    arrayForInputValue = [];
-    console.log("search et tagbox = rien ");
   }
 });
 
@@ -74,8 +83,8 @@ ustensilInput.addEventListener("input", (e) => {
 
 /**
  *
- * @param {*} e event to input.value
- * @param {*} arrayForTag array for ingredient/appliance/ustensils
+ * @param {string} e event to input.value
+ * @param {array*} arrayForTag array for ingredient/appliance/ustensils
  */
 function onInput(e, arrayForTag) {
   let input = e.target;
@@ -92,6 +101,7 @@ function onInput(e, arrayForTag) {
 function displayTagElement() {
   tagBoxContainer.innerHTML = "";
   arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
+
   for (let i = 0; i < arrayforAllTag.length; i++) {
     let color;
     if (i === 0) {
@@ -103,6 +113,7 @@ function displayTagElement() {
     if (i === 2) {
       color = "btn-danger";
     }
+
     for (let j = 0; j < arrayforAllTag[i].length; j++) {
       let tag = arrayforAllTag[i][j];
 
@@ -111,41 +122,54 @@ function displayTagElement() {
                                      </button>`;
 
       recipeFilter(tag);
+      console.log("display Tag", arrayforAllTag, filteredRecipes.length);
     }
   }
 }
+
+/**
+ * function for close tag element
+ */
 function closeTag() {
   if (searchBar.value != "") {
-    arrayforAllTag = [
+    arrayforAllTag = arrayforAllTag = [
       selectedIngredients,
       selectedAppliances,
       selectedUstensils,
       [searchBar.value],
     ];
+    console.log(
+      "closeTag arrayforAllTag[4]",
+      arrayforAllTag,
+      filteredRecipes.length
+    );
   } else {
     arrayforAllTag;
+    console.log(
+      "closeTag arrayforAllTag[3]",
+      arrayforAllTag,
+      filteredRecipes.length
+    );
   }
-  console.log("arrayforAllTag", arrayforAllTag);
 
   let tagBtn = document.querySelectorAll(".btn");
   tagBtn.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       let word = e.target.value;
-      console.log(btn, e.target.value);
 
       for (let i = 0; i < arrayforAllTag.length; i++) {
-        console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
+        // console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
         let index = arrayforAllTag[i].indexOf(word);
-        console.log(index);
+
         if (index > -1) {
           arrayforAllTag[i].splice(index, 1);
         }
-        console.log(arrayforAllTag);
-        btn.remove();
+
         for (let j = 0; j < arrayforAllTag[i].length; j++) {
           let Tag = arrayforAllTag[i][j];
           recipesFilterForSuppValue(Tag);
         }
+        btn.remove();
       }
 
       if (searchBar.value <= 2 && tagBoxContainer.innerHTML === "") {
@@ -154,12 +178,7 @@ function closeTag() {
         selectedAppliances = [];
         selectedUstensils = [];
       }
-      // if (searchBar.value != "" && tagBoxContainer.innerHTML === "") {
-      //   recipesFilterForSuppValue(searchBar.value);
-      //   selectedIngredients = [];
-      //   selectedAppliances = [];
-      //   selectedUstensils = [];
-      // }
+      console.log("arrayforAllTag[x]", arrayforAllTag, filteredRecipes.length);
     });
   });
 }
