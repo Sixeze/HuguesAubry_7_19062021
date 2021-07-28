@@ -32,32 +32,23 @@ searchBar.addEventListener("input", (e) => {
   if (inputValue.length > 2) {
     mainDisplayRecipes.innerHTML = "";
     recipeFilter(inputValue);
-    console.log("input > 2", arrayforAllTag, filteredRecipes.length);
+    // console.log("input > 2", arrayforAllTag, filteredRecipes.length);
+
+    tagAndSearchBarValue();
 
     if (inputValue < valueOfSearchBar) {
       recipesFilterForSuppValue(inputValue);
-      console.log("backSpace", arrayforAllTag, filteredRecipes.length);
+      // console.log("backSpace", arrayforAllTag, filteredRecipes.length);
+      if (tagBoxContainer.innerHTML !== "") {
+        for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
+          let eltsValue = tagBoxContainer.childNodes[i];
+          recipesFilterForSuppValue(eltsValue.value);
+        }
+      }
     }
     valueOfSearchBar = inputValue;
   }
-  if (inputValue.length <= 2) {
-    arrayforAllTag;
-    if (tagBoxContainer.innerHTML == "") {
-      displayAllRecipes();
-      console.log("if <2 tagBox vierge", filteredRecipes.length);
-    }
-    if (tagBoxContainer.innerHTML !== "") {
-      console.log(
-        "if <2 tagBox!vierge",
-        arrayforAllTag,
-        filteredRecipes.length
-      );
-      for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
-        let eltsValue = tagBoxContainer.childNodes[i];
-        recipesFilterForSuppValue(eltsValue.value);
-      }
-    }
-  }
+  ifSearchMethod(inputValue.length);
 });
 
 /**
@@ -100,7 +91,7 @@ function onInput(e, arrayForTag) {
  */
 function displayTagElement() {
   tagBoxContainer.innerHTML = "";
-  arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
+  justTagInArray();
 
   for (let i = 0; i < arrayforAllTag.length; i++) {
     let color;
@@ -122,7 +113,7 @@ function displayTagElement() {
                                      </button>`;
 
       recipeFilter(tag);
-      console.log("display Tag", arrayforAllTag, filteredRecipes.length);
+      // console.log("display Tag", arrayforAllTag, filteredRecipes.length);
     }
   }
 }
@@ -132,24 +123,9 @@ function displayTagElement() {
  */
 function closeTag() {
   if (searchBar.value != "") {
-    arrayforAllTag = arrayforAllTag = [
-      selectedIngredients,
-      selectedAppliances,
-      selectedUstensils,
-      [searchBar.value],
-    ];
-    console.log(
-      "closeTag arrayforAllTag[4]",
-      arrayforAllTag,
-      filteredRecipes.length
-    );
+    tagAndSearchBarValue();
   } else {
-    arrayforAllTag;
-    console.log(
-      "closeTag arrayforAllTag[3]",
-      arrayforAllTag,
-      filteredRecipes.length
-    );
+    justTagInArray();
   }
 
   let tagBtn = document.querySelectorAll(".btn");
@@ -171,16 +147,48 @@ function closeTag() {
         }
         btn.remove();
       }
+      ifSearchMethod(searchBar.value);
 
-      if (searchBar.value <= 2 && tagBoxContainer.innerHTML === "") {
-        displayAllRecipes();
-        selectedIngredients = [];
-        selectedAppliances = [];
-        selectedUstensils = [];
-      }
       console.log("arrayforAllTag[x]", arrayforAllTag, filteredRecipes.length);
     });
   });
+}
+
+/**
+ *
+ * @param {input value} searchBarValue
+ */
+function ifSearchMethod(searchBarValue) {
+  if (searchBarValue <= 2) {
+    justTagInArray();
+    if (tagBoxContainer.innerHTML == "") {
+      displayAllRecipes();
+      selectedIngredients = [];
+      selectedAppliances = [];
+      selectedUstensils = [];
+    }
+    if (tagBoxContainer.innerHTML !== "") {
+      for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
+        let eltsValue = tagBoxContainer.childNodes[i];
+        recipesFilterForSuppValue(eltsValue.value);
+      }
+    }
+  }
+}
+
+function justTagInArray() {
+  arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
+  console.log(arrayforAllTag, filteredRecipes.length);
+}
+
+function tagAndSearchBarValue() {
+  arrayforAllTag = [
+    selectedIngredients,
+    selectedAppliances,
+    selectedUstensils,
+    [searchBar.value],
+  ];
+  console.log(arrayforAllTag, filteredRecipes.length);
 }
 
 // show Recipe open Page
