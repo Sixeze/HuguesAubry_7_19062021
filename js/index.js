@@ -1,21 +1,24 @@
+import { displayAllRecipes } from "./searchBar.js";
 import { displayRecipes } from "./recipeCards.js";
+import { filteredRecipes } from "./searchBar.js";
 import { recipeFilter } from "./searchBar.js";
-import { recipes } from "./recipes.js";
+import { recipesFilterForSuppValue } from "./searchBar.js";
 
-// import { recipeClass } from "./recipesClass.js";
-
-const allRecipes = recipes;
-let filteredRecipes = allRecipes;
 let selectedIngredients = [];
 let selectedAppliances = [];
 let selectedUstensils = [];
+let arrayforAllTag = [
+  selectedIngredients,
+  selectedAppliances,
+  selectedUstensils,
+];
+let valueOfSearchBar = "";
 
 // DOM elements for index
 const searchBar = document.querySelector(".inputSearchBar");
-const mainDisplayRecipes = document.querySelector("#displayRecipes");
 const tagBoxContainer = document.querySelector("#tagBoxContainer");
+const mainDisplayRecipes = document.querySelector("#displayRecipes");
 
-// DOM elements for ingredients
 const ingredientInput = document.querySelector("#ingredients");
 const applianceInput = document.querySelector("#appliances");
 const ustensilInput = document.querySelector("#ustensils");
@@ -24,17 +27,28 @@ const ustensilInput = document.querySelector("#ustensils");
  * addEventlistener for input searchBar
  */
 searchBar.addEventListener("input", (e) => {
-  let inputValue = e.target.value;
+  let inputValue = e.target.value.toLowerCase();
+
   if (inputValue.length > 2) {
     mainDisplayRecipes.innerHTML = "";
-    filteredRecipes = [];
-    recipeFilter(inputValue, allRecipes, filteredRecipes);
-    displayRecipes(filteredRecipes);
+    recipeFilter(inputValue);
+    // console.log("input > 2", arrayforAllTag, filteredRecipes.length);
+
+    tagAndSearchBarValue();
+
+    if (inputValue < valueOfSearchBar) {
+      recipesFilterForSuppValue(inputValue);
+      // console.log("backSpace", arrayforAllTag, filteredRecipes.length);
+      if (tagBoxContainer.innerHTML !== "") {
+        for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
+          let eltsValue = tagBoxContainer.childNodes[i];
+          recipesFilterForSuppValue(eltsValue.value);
+        }
+      }
+    }
+    valueOfSearchBar = inputValue;
   }
-  if (inputValue.length <= 2 && tagBoxContainer.innerHTML === "") {
-    filteredRecipes = allRecipes;
-    displayRecipes(filteredRecipes);
-  }
+  ifSearchMethod(inputValue.length);
 });
 
 /**
@@ -43,44 +57,43 @@ searchBar.addEventListener("input", (e) => {
 ingredientInput.addEventListener("input", (e) => {
   onInput(e, selectedIngredients);
   displayTagElement();
+  closeTag();
 });
 
 applianceInput.addEventListener("input", (e) => {
   onInput(e, selectedAppliances);
   displayTagElement();
+  closeTag();
 });
 
 ustensilInput.addEventListener("input", (e) => {
   onInput(e, selectedUstensils);
   displayTagElement();
+  closeTag();
 });
 
 /**
  *
- * @param {*} e event to input.value
- * @param {*} arrayForTag array for ingredient/appliance/ustensils
+ * @param {string} e event to input.value
+ * @param {array*} arrayForTag array for ingredient/appliance/ustensils
  */
 function onInput(e, arrayForTag) {
   let input = e.target;
   let inputTag = input.value.toLowerCase();
-  arrayForTag.push(inputTag);
-
-  input.value = "";
+  if (inputTag.length >= 3) {
+    arrayForTag.push(inputTag);
+    input.value = "";
+  }
 }
 
 /**
  * function for display tag
  */
 function displayTagElement() {
-  // console.log("arrayforAllTag :", arrayforAllTag);
   tagBoxContainer.innerHTML = "";
-  const arrayforAllTag = [
-    selectedIngredients,
-    selectedAppliances,
-    selectedUstensils,
-  ];
+  justTagInArray();
+
   for (let i = 0; i < arrayforAllTag.length; i++) {
-    // console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
     let color;
     if (i === 0) {
       color = "btn-primary";
@@ -91,84 +104,92 @@ function displayTagElement() {
     if (i === 2) {
       color = "btn-danger";
     }
+
     for (let j = 0; j < arrayforAllTag[i].length; j++) {
-      // console.log("i = ", i, "j = ", arrayforAllTag[i][j], j);
       let tag = arrayforAllTag[i][j];
 
       tagBoxContainer.innerHTML += `<button type="button" value="${tag}" class="btn ${color}  text-white mx-1">
                                      ${tag} <img src="img/close.svg" alt="close" class="mx-1">
                                      </button>`;
 
-      console.log(filteredRecipes);
-      filterRecipe(tag);
+      recipeFilter(tag);
+      // console.log("display Tag", arrayforAllTag, filteredRecipes.length);
     }
-    closeTag(arrayforAllTag[i]);
   }
 }
 
 /**
- *
- * @param {object array} array
+ * function for close tag element
  */
-function closeTag(array) {
-  console.log(array);
+function closeTag() {
+  if (searchBar.value != "") {
+    tagAndSearchBarValue();
+  } else {
+    justTagInArray();
+  }
+
   let tagBtn = document.querySelectorAll(".btn");
   tagBtn.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       let word = e.target.value;
-      // console.log(word);
-      const index = array.indexOf(word);
-      // console.log(index);
-      if (index > -1) {
-        array.splice(index, 1);
-      }
-      console.log(array.length);
 
-      btn.remove();
+      for (let i = 0; i < arrayforAllTag.length; i++) {
+        // console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
+        let index = arrayforAllTag[i].indexOf(word);
 
-      array.forEach((tag) => {
-        // console.log(tag);
-        filteredRecipes = allRecipes;
-        filterRecipe(tag);
-      });
-
-      if (tagBoxContainer.innerHTML === "") {
-        (selectedIngredients = []),
-          (selectedAppliances = []),
-          (selectedUstensils = []);
-
-        if (searchBar.value === "") {
-          filteredRecipes = allRecipes;
-          displayRecipes(filteredRecipes);
+        if (index > -1) {
+          arrayforAllTag[i].splice(index, 1);
         }
+
+        for (let j = 0; j < arrayforAllTag[i].length; j++) {
+          let Tag = arrayforAllTag[i][j];
+          recipesFilterForSuppValue(Tag);
+        }
+        btn.remove();
       }
+      ifSearchMethod(searchBar.value);
+
+      console.log("arrayforAllTag[x]", arrayforAllTag, filteredRecipes.length);
     });
   });
 }
 
 /**
  *
- * @param {element array} tag
+ * @param {input value} searchBarValue
  */
-function filterRecipe(tag) {
-  filteredRecipes = filteredRecipes.filter((recipe) => {
-    return (
-      recipe.ingredients
-        .map((ingredient) => ingredient.ingredient)
-        .join("")
-        .toLowerCase()
-        .includes(tag) ||
-      recipe.ustensils
-        .map((ustensil) => ustensil)
-        .join("")
-        .toLowerCase()
-        .includes(tag) ||
-      recipe.appliance.toLowerCase().includes(tag)
-    );
-  });
-  // console.log(filteredRecipes);
-  displayRecipes(filteredRecipes);
+function ifSearchMethod(searchBarValue) {
+  if (searchBarValue <= 2) {
+    justTagInArray();
+    if (tagBoxContainer.innerHTML == "") {
+      displayAllRecipes();
+      selectedIngredients = [];
+      selectedAppliances = [];
+      selectedUstensils = [];
+    }
+    if (tagBoxContainer.innerHTML !== "") {
+      for (let i = 0; i < tagBoxContainer.childNodes.length; i++) {
+        let eltsValue = tagBoxContainer.childNodes[i];
+        recipesFilterForSuppValue(eltsValue.value);
+      }
+    }
+  }
+}
+
+function justTagInArray() {
+  arrayforAllTag = [selectedIngredients, selectedAppliances, selectedUstensils];
+  console.log(arrayforAllTag, filteredRecipes.length);
+}
+
+function tagAndSearchBarValue() {
+  arrayforAllTag = [
+    selectedIngredients,
+    selectedAppliances,
+    selectedUstensils,
+    [searchBar.value],
+  ];
+  console.log(arrayforAllTag, filteredRecipes.length);
 }
 
 // show Recipe open Page
-displayRecipes(allRecipes);
+displayRecipes(filteredRecipes);

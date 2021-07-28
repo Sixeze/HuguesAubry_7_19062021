@@ -1,35 +1,47 @@
-export function recipeFilter(value, allRecipes, filteredRecipes) {
-  console.time("recipeFilter");
-  let word = value.toLowerCase();
-  // console.log(word);
-  for (let recipe of allRecipes) {
-    let match = true;
-    let listOfIngredients = [];
-    let listOfUstensils = [];
+import { displayRecipes } from "./recipeCards.js";
+import { recipes } from "./recipes.js";
 
-    for (let i of recipe.ingredients) {
-      listOfIngredients.push(i.ingredient.toLowerCase());
-    }
+export let allRecipes = recipes;
+export let filteredRecipes = [...allRecipes];
 
-    for (let ustensil of recipe.ustensils) {
-      listOfUstensils.push(ustensil.toLowerCase());
-    }
-    if (
-      !recipe.description.toLowerCase().includes(word) &&
-      !recipe.name.toLowerCase().includes(word) &&
-      !listOfIngredients.join(" ").includes(word) &&
-      !listOfUstensils.join(" ").includes(word)
-    ) {
-      match = false;
-    }
+/**
+ *
+ * @param {string} word
+ */
+export function recipeFilter(word) {
+  // console.log("tableau avant appel fonction : ", filteredRecipes);
+  filteredRecipes = filteredRecipes.filter((recipe) => {
+    return (
+      recipe.description.toLowerCase().includes(word) ||
+      recipe.name.toLowerCase().includes(word) ||
+      recipe.ingredients
+        .map((ingredient) => ingredient.ingredient)
+        .join("")
+        .toLowerCase()
+        .includes(word) ||
+      recipe.ustensils
+        .map((ustensil) => ustensil)
+        .join("")
+        .toLowerCase()
+        .includes(word) ||
+      recipe.appliance.toLowerCase().includes(word)
+    );
+  });
 
-    if (match) {
-      filteredRecipes.push(recipe);
-    }
-  }
-  console.timeEnd("recipeFilter");
+  displayRecipes(filteredRecipes);
 }
 
-// console.log(newRecipes);
-// console.log("listOfIngredients :", listOfIngredients);
-// console.log("listOfUstensils :", listOfIngredients);
+export function displayAllRecipes() {
+  filteredRecipes = [...allRecipes];
+  displayRecipes(filteredRecipes);
+}
+
+/**
+ *
+ * @param {string} word
+ */
+export function recipesFilterForSuppValue(word) {
+  filteredRecipes = [...allRecipes];
+
+  recipeFilter(word);
+}
