@@ -2,8 +2,6 @@ import { displayRecipes } from "./recipeCards.js";
 import { recipeFilter } from "./searchBar.js";
 import { recipes } from "./recipes.js";
 
-// import { recipeClass } from "./recipesClass.js";
-
 const allRecipes = recipes;
 let filteredRecipes = allRecipes;
 let selectedIngredients = [];
@@ -63,16 +61,16 @@ ustensilInput.addEventListener("input", (e) => {
 function onInput(e, arrayForTag) {
   let input = e.target;
   let inputTag = input.value.toLowerCase();
-  arrayForTag.push(inputTag);
-
-  input.value = "";
+  if (inputTag.length >= 3) {
+    arrayForTag.push(inputTag);
+    input.value = "";
+  }
 }
 
 /**
  * function for display tag
  */
 function displayTagElement() {
-  // console.log("arrayforAllTag :", arrayforAllTag);
   tagBoxContainer.innerHTML = "";
   const arrayforAllTag = [
     selectedIngredients,
@@ -80,7 +78,6 @@ function displayTagElement() {
     selectedUstensils,
   ];
   for (let i = 0; i < arrayforAllTag.length; i++) {
-    // console.log("i =", i, "arrayforAllTag[i] = ", arrayforAllTag[i]);
     let color;
     if (i === 0) {
       color = "btn-primary";
@@ -92,7 +89,6 @@ function displayTagElement() {
       color = "btn-danger";
     }
     for (let j = 0; j < arrayforAllTag[i].length; j++) {
-      // console.log("i = ", i, "j = ", arrayforAllTag[i][j], j);
       let tag = arrayforAllTag[i][j];
 
       tagBoxContainer.innerHTML += `<button type="button" value="${tag}" class="btn ${color}  text-white mx-1">
@@ -116,9 +112,9 @@ function closeTag(array) {
   tagBtn.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       let word = e.target.value;
-      // console.log(word);
+
       const index = array.indexOf(word);
-      // console.log(index);
+
       if (index > -1) {
         array.splice(index, 1);
       }
@@ -127,7 +123,6 @@ function closeTag(array) {
       btn.remove();
 
       array.forEach((tag) => {
-        // console.log(tag);
         filteredRecipes = allRecipes;
         filterRecipe(tag);
       });
