@@ -11515,4 +11515,8 @@ datalist {
 .articleCard {
   border: none;
 }
+
+.close {
+  cursor: auto;
+}
 /*# sourceMappingURL=style.css.map */
