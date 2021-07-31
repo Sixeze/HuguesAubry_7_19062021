@@ -1,6 +1,6 @@
 export function recipeFilter(value, allRecipes, filteredRecipes) {
   let word = value.toLowerCase();
-  // console.log(word);
+
   for (let recipe of allRecipes) {
     let match = true;
     let listOfIngredients = [];
