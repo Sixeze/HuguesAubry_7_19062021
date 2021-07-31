@@ -9,7 +9,8 @@ export let filteredRecipes = [...allRecipes];
  * @param {string} word
  */
 export function recipeFilter(word) {
-  // console.log("tableau avant appel fonction : ", filteredRecipes);
+  // console.log("before", filteredRecipes.length);
+  // console.log("appel du mot :", word);
   filteredRecipes = filteredRecipes.filter((recipe) => {
     return (
       recipe.description.toLowerCase().includes(word) ||
@@ -29,19 +30,13 @@ export function recipeFilter(word) {
   });
 
   displayRecipes(filteredRecipes);
+  // console.log("after", filteredRecipes.length);
+}
+export function allRecipesToFiltered() {
+  filteredRecipes = [...allRecipes];
 }
 
 export function displayAllRecipes() {
-  filteredRecipes = [...allRecipes];
+  allRecipesToFiltered();
   displayRecipes(filteredRecipes);
-}
-
-/**
- *
- * @param {string} word
- */
-export function recipesFilterForSuppValue(word) {
-  filteredRecipes = [...allRecipes];
-
-  recipeFilter(word);
 }

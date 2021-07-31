@@ -1,5 +1,5 @@
 /**
- * @param {object} arrayOfRecipes array for displaying recipe
+ * @param {object array} arrayOfRecipes array for displaying recipe
  */
 export function displayComboBox(arrayOfRecipes) {
   const datalistIngredients = document.querySelector("#ingredientsList");
@@ -37,9 +37,4 @@ export function displayComboBox(arrayOfRecipes) {
   ustensilsArray.forEach((ustensil) => {
     datalistUstensils.innerHTML += `<option value="${ustensil}"${ustensil}</option>`;
   });
-
-  // console.log(ingredientsArray);
-  // console.log(arrayOfRecipes);
-  // console.log(appliancesArray);
-  // console.log(ustensilsArray);
 }

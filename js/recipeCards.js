@@ -2,17 +2,16 @@ import { displayComboBox } from "./comboBox.js";
 
 /**
  *
- * @param {*} arrayOfRecipes array for displaying recipe
+ * @param {object array} arrayOfRecipes array for displaying recipe
  */
 export function displayRecipes(arrayOfRecipes) {
-  // console.log(arrayOfRecipes);
   let mainDisplayRecipes = document.querySelector("#displayRecipes");
 
   mainDisplayRecipes.innerHTML = "";
 
   if (arrayOfRecipes.length === 0) {
     mainDisplayRecipes.innerHTML = `<p class="text-center h3">Aucune recette ne correspond à votre critère… vous pouvez
-chercher "tarte aux pommes", "poisson", etc.</p>`;
+                                    chercher "tarte aux pommes", "poisson", etc.</p>`;
   }
   arrayOfRecipes.forEach((recipe) => {
     const articleRecipes = document.createElement("article");
