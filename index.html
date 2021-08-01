@@ -28,9 +28,10 @@
       </header>
 
       <!-- Section SeachBox -->
-      <section role="searchbox" class="row">
+      <section role="search" class="row">
         <div class="input-group mb-1">
           <input
+            role="searchbox"
             class="form-control col-10 bg-light rounded inputSearchBar"
             type="text"
             placeholder="Rechercher un ingrédient, appareil, ustensile ou une recette"
@@ -46,10 +47,14 @@
       </section>
 
       <!-- Section Display Tag -->
-      <section id="tagBoxContainer" role="list" class="container m-1"></section>
+      <section
+        id="tagBoxContainer"
+        role="complementary"
+        class="container m-1"
+      ></section>
 
       <!-- Section combobox -->
-      <section role="combobox" class="row my-3">
+      <section role="complementary" class="row my-3">
         <div class="input-inline input-group-lg col-lg-3">
           <input
             type="text"
